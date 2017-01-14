@@ -20,9 +20,16 @@ def parse_arguments():
     num_elements = int(argv[1])
     return num_elements
 
+def solve(num_elements):
+    pass
+
+def plot_heat(solution):
+    pass
+
 def main():
     num_elements = parse_arguments()
-    pass # TODO: Implement
+    a = solve(num_elements)
+    plot_heat(a)
 
 if __name__ == '__main__':
     main()
