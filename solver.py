@@ -4,6 +4,7 @@
 from sys import argv, exit
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def print_usage():
     print("Usage: ./solver [num_elements] ")
@@ -21,7 +22,14 @@ def parse_arguments():
     return num_elements
 
 def solve(num_elements):
-    pass
+    base_matrix = np.array([[2/3, -1/6, -1/3, -1/6],
+                            [-1/6, 2/3, -1/6, -1/3],
+                            [-1/3, -1/6, 2/3, -1/6],
+                            [-1/6, -1/3, -1/6, 2/3]],
+                           dtype = 'float64')
+    # For each element of dimensions a1 x a2, the element's
+    # matrix is cosntructed by multiplying the base matrix
+    # elementwise by scalar 1 / (a1 * a2)
 
 def plot_heat(solution):
     pass
