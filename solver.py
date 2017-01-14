@@ -34,16 +34,41 @@ def parse_arguments():
         exit()
     return num_elements
 
+def applySquareUnit(matrix, n, a, b, c, d):
+    # Creating base matrix 4x4
+    p = 2./3; q = -1./6; r = -1./3
+    base_matrix = np.array([[p,q,r,q],
+	                        [q,p,q,r],
+	                        [r,q,p,q],
+	                        [q,r,q,p]])
+    mapping = [a,b,c,d]
+    for y in range(4):
+        for x in range(4):
+            matrix[mapping[y]][mapping[x]] += base_matrix[y][x] / n ** 2
 
+def prepareCoefficientMatrix(n):
+    M = np.zeros((n*(3*n+4)+1,n*(3*n+4)+1))
+    # Area 1
+    for y in range(n):
+        for x in range(2*n):
+            a = (2*n+1)*(y  )+(x  )
+            b = (2*n+1)*(y  )+(x+1)
+            c = (2*n+1)*(y+1)+(x+1)
+            d = (2*n+1)*(y+1)+(x  )
+            applySquareUnit(matrixM, n, a, b, c, d)
+    # Area 2
+    for y in range(n):
+        for x in range(n):
+            offset = 2*n*(n+1)
+            a = (n+1)*(y  )+(x  )+offset 
+            b = (n+1)*(y  )+(x+1)+offset
+            c = (n+1)*(y+1)+(x+1)+offset
+            d = (n+1)*(y+1)+(x  )+offset
+            applySquareUnit(matrixM, n, a, b, c, d)
+    return M
+    
 def solve(num_elements):
-    base_matrix = np.array([[2/3, -1/6, -1/3, -1/6],
-                            [-1/6, 2/3, -1/6, -1/3],
-                            [-1/3, -1/6, 2/3, -1/6],
-                            [-1/6, -1/3, -1/6, 2/3]],
-                           dtype = 'float64')
-    # For each element of dimensions a1 x a2, the element's
-    # matrix is cosntructed by multiplying the base matrix
-    # elementwise by scalar 1 / (a1 * a2) 
+    pass
 
 def plot_heat(solution):
     pass
