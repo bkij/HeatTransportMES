@@ -68,10 +68,11 @@ def prepareCoefficientMatrix(n):
 			c = (n+1)*(y+1)+(x+1)+offset
 			d = (n+1)*(y+1)+(x  )+offset
 			applySquareUnit(matrix, n, a, b, c, d)
-	# Fill some rows with ones
+	# Fill some rows with zeros and one
 	which_rows = range(n*(2*n+1), n*(2*n+2)) + range(n*(2*n+2), n*(3*n+3)+1, n+1)
 	for r in which_rows:
-		matrix[r] = np.ones(size)
+		matrix[r] = np.zeros(size)
+		matrix[r][r] = 1.
 	return matrix
 
 def cbrt(x):
