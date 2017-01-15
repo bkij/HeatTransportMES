@@ -8,8 +8,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-
-# TODO: Can elements be squares only? AKA is the form 3*4^n correct
 def print_usage():
     print("Usage: ./solver [num_elements] ")
     print()
@@ -20,6 +18,7 @@ def print_usage():
 
 def is_form_valid(num_elements):
     # check if num_elements is of form 3*n^2
+    # n is the n x n division of each of base three finite elements
     if num_elements % 3 != 0:
         return False
     num_elements /= 3
@@ -42,7 +41,7 @@ def applySquareUnit(matrix, n, a, b, c, d):
                             [q,p,q,r],
                             [r,q,p,q],
                             [q,r,q,p]])
-    # Multiply each element by 1/ (a1 * a2)
+    # Multiply each element by 1 / (a1 * a2)
     # In our case a1 = a2 = n
     base_matrix /= (n ** 2)
     mapping = [a,b,c,d]
@@ -80,15 +79,16 @@ def prepareCoefficientMatrix(n):
 
 def cbrt(x):
     k = 1
-    if (x<0): k = -1
-    return k*np.abs(x)**(1./3)
+    if x < 0:
+        k = -1
+    return k * np.abs(x)**(1./3)
     
 def functionG(x, y):
-    r_squared = x**2+y**2
-    theta = np.arctan2(y,x)
-    return cbrt(r_squared)*cbrt(np.sin(theta+np.pi/2)**2)
+    r_squared = x ** 2 + y ** 2
+    theta = np.arctan2(y, x)
+    return cbrt(r_squared) * cbrt(np.sin(theta + np.pi/2) ** 2)
 
-def pairG(x1, y1, x2, y2, n): return (functionG(x1,y1)+functionG(x2,y2))/(2*n)
+def pairG(x1, y1, x2, y2, n): return (functionG(x1, y1) + functionG(x2, y2)) / (2 * n)
     
 def prepareConstantMatrix(n):
     matrix = np.zeros(getSize(n))
