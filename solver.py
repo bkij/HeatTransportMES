@@ -46,8 +46,10 @@ def applySquareUnit(matrix, n, a, b, c, d):
 		for x in range(4):
 			matrix[mapping[y]][mapping[x]] += base_matrix[y][x] / n ** 2
 
+def getSize(n): return n*(3*n+4)+1
+
 def prepareCoefficientMatrix(n):
-	size = n*(3*n+4)+1
+	size = getSize(n)
 	matrix = np.zeros((size,size))
 	# Area 1
 	for y in range(n):
@@ -72,6 +74,52 @@ def prepareCoefficientMatrix(n):
 		matrix[r] = np.ones(size)
 	return matrix
 
+def cbrt(x):
+	k = 1
+	if (x<0): k = -1
+	return k*np.abs(x)**(1./3)
+	
+def functionG(x, y):
+	r_squared = x**2+y**2
+	theta = np.arctan2(y,x)
+	return cbrt(r_squared)*cbrt(np.sin(theta+np.pi/2)**2)
+
+def pairG(x1, y1, x2, y2, n): return (functionG(x1,y1)+functionG(x2,y2))/(2*n)
+	
+def prepareConstantMatrix(n):
+	matrix = np.zeros(getSize(n))
+	unit = 1./n
+	half = unit/2
+	# Left segment
+	for i,y in zip(range(2*n+1,n*(2*n+1),2*n+1),np.linspace(1-unit,unit,n-1)):
+		x = 1
+		matrix[i] = pairG(x,y-half,x,y+half,n)
+	# Upper left corner
+	matrix[0] = pairG(-1,1-half,-1+half,1,n)
+	# Upper segment
+	for i,x in zip(range(1,2*n),np.linspace(-1+unit,1-unit,2*n-1)):
+		y = 1
+		matrix[i] = pairG(x-half,y,x+half,y,n)
+	# Upper right corner
+	matrix[2*n] = pairG(1,1-half,1-half,1, n)
+	# Right segment !!!!!! ERROR
+	for i,y in zip(range(4*n+1,n*(2*n+3),2*n+1)+range(n*(2*n+3),n*(3*n+4),2*n+1),np.linspace(1-unit,-1+unit,2*n-1)):
+		x = 1
+		matrix[i] = pairG(x,y-half,x,y+half,n)
+	# Bottom right corner
+	matrix[n*(3*n+4)] = pairG(1,-1+half,1-half,-1,n)
+	# Bottom segment
+	for i,x in zip(range(3*n*(n+1)+1,n*(3*n+4)),np.linspace(unit,1-unit,n-1)):
+		y = 1
+		matrix[i] = pairG(x-half,y,x+half,y,n)
+	
+	return matrix
+	
+def prepareSolution(n):
+	A = prepareCoefficientMatrix(n)
+	B = prepareConstantMatrix(n)
+	return np.linalg.solve(A,B)
+	
 def solve(num_elements):
     pass
 
